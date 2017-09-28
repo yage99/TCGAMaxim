@@ -1,33 +1,61 @@
 # -*- coding: utf-8 -*-
 
 import re
-matcher = re.compile("(\{.*\})(.*)")
 
-def clinical_parser(file):
-    import xml.etree.ElementTree
-    e = xml.etree.ElementTree.parse(file).getroot()
 
-    print_node(e)
+class tcga_clinical:
+    _matcher = re.compile("(\{.*\})(.*)")
+    
+    def __init__(self, file):
+        import xml.etree.ElementTree
+        self.root = xml.etree.ElementTree.parse(file).getroot()
 
-def print_node(node, level=0, lastElement=False):
-    leng = "  " * level
-    if lastElement:
-        if node:
-            line = leng + "└─┬─>"
+        self.dict_clinical = self.__clinical_parse_to_dict(self.root)
+
+    def print_nodes(self):
+        self.__print_node(self.root)
+
+    def __clinical_parse_to_dict(self, node):
+        elements = {}
+    
+        for child in node:
+            key = tcga_clinical._matcher.match(child.tag).group(2)
+            if 'prefered_name' in child.attrib:
+                key = child.attrb['prefered_name']
+            
+            elements[key] = self.__clinical_parse_to_dict(child)
+        
+        if node.text is not None and '\n' not in node.text:
+            key = tcga_clinical._matcher.match(node.tag).group(2)
+            if 'prefered_name' in node.attrib:
+                key = node.attrb['prefered_name']
+
+            elements[key] = node.text
+
+        return elements
+
+
+    def __print_node(self, node, level=0, lastElement=False):
+        leng = "  " * level
+        if lastElement:
+            if len(node) > 0:
+                line = leng + "└─┬─>"
+            else:
+                line = leng + "└─>"
         else:
-            line = leng + "└─>"
-    else:
-        if node:
-            line = leng + "├─┬─>"
+            if len(node) > 0:
+                line = leng + "├─┬─>"
+            else:
+                line = leng + "├─>"
+
+        key = tcga_clinical._matcher.match(node.tag).group(2)
+        if 'prefered_name' in node.attrib:
+            key = node.attrib['prefered_name']
+        if node.text is not None and "\n" not in node.text:
+            print(line + key + ": " + node.text)
         else:
-            line = leng + "├─>"
+            print(line + key)
 
-    #print node.tag
-    if node.text is not None and "\n" not in node.text:
-        print(line + matcher.match(node.tag).group(2) + ": " + node.text)
-    else:
-        print(line + matcher.match(node.tag).group(2))
-
-    for idx, child in enumerate(node):
-        print_node(child, level+1, idx==len(node)-1)
+        for idx, child in enumerate(node):
+            self.__print_node(child, level+1, idx==len(node)-1)
 
