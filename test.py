@@ -1,9 +1,11 @@
-import base
+from clinical import clinical
+from meta import meta
 
-tcgaClinical = base.tcga_clinical('/Users/zhangya/Documents/GBM/72f13144-870b-4e3e-8111-8644f880a6b8/nationwidechildrens.org_clinical.TCGA-12-0691.xml')
+clinicalMeta = meta("/Users/zhangya/Documents/GBM/gdc_gbm_clinical.2017-09-25T08-50-24.108521.txt")
+for id, file in clinicalMeta.files():
+    tcgaClinical = clinical('/Users/zhangya/Documents/GBM/' + file)
+    tcgaClinical.print_nodes()
 
-tcgaClinical.print_nodes()
-
-elements = tcgaClinical.dict_clinical
-for key in elements:
-    print(key)
+    elements = tcgaClinical.dict_clinical
+    for key in elements:
+        print(key)
