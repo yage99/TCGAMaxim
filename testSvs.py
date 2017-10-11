@@ -1,17 +1,61 @@
+# -*- coding: utf-8 -*-
+
 from svs import svs
 from threading import Thread
+from meta import meta
+import os
+import sys
+import multiprocessing as mp
+from utils import printProgressBar
 
-slide = svs('/Users/zhangya/Downloads/ffe47c76-056e-48a7-b184-938df6e703e9/TCGA-02-0054-01A-01-TS1.e362807e-460b-490f-9a29-2544ba144893.svs')
-slide1 = svs('/Users/zhangya/Downloads/ffe47c76-056e-48a7-b184-938df6e703e9/TCGA-03-0054-01A-01-TS1.e362807e-460b-490f-9a29-2544ba144893.svs')
-thread1 = Thread(target = slide.slideWholeSlide,
-                 args = ("/Users/zhangya/Downloads/ffe47c76-056e-48a7-b184-938df6e703e9/",))
-thread2 = Thread(target = slide1.slideWholeSlide,
-                 args = ("/Users/zhangya/Downloads/ffe47c76-056e-48a7-b184-938df6e703e9/",))
+allFilesCount = 0
+currentFileProcessed = 0
 
-thread1.start()
-thread2.start()
+def log_callback(result):
+    global currentFileProcessed, allFilesCount
+    currentFileProcessed = currentFileProcessed + 1
+    print("Overall Progressing: %d/%d" % (currentFileProcessed, allFilesCount))
+    printProgressBar(currentFileProcessed, allFilesCount,
+                     prefix = ("%d/%d:"),
+                     length = 30)
 
-thread1.join()
-thread2.join()
-    
+def process(location, svsFile):
+    slide = svs(os.path.join(location, svsFile))
+
+    #thread = Thread(target = slide.slideWholeSlide,
+    #         args = (slide.location, 1024,))
+    #pool.apply_async(slide.slideWholeSlide,
+    #                 args = (slide.location, 1024, ),
+    #                 callback = log_callback)
+    slide.slideWholeSlide("/media/af214dbe-b6fa-4f5e-932a-14b133ba4766/zhangya/svs-processed", 1024)
+        
+
+def main(metaFile):
+    global allFilesCount
+    svsSlides = meta(metaFile)
+    location, filename = os.path.split(metaFile)
+    print location
+
+    pool = mp.Pool(20)
+
+    for id, svsFile in svsSlides.files():
+        print svsFile
+        pool.apply_async(process, (location, svsFile, ),
+                         callback = log_callback)
+        
+        allFilesCount = allFilesCount + 1
+
+        #thread.start()
+        #thread.join()
+        #threads.append(thread)
+
+    pool.close()
+    pool.join()
+
+    #for thread in threads:
+    #    thread.join()
+
+if __name__ == '__main__':
+    #print sys.argv
+    main(sys.argv[1])
 

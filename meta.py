@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 
 class meta:
     import re
@@ -25,5 +26,6 @@ class meta:
             
             #dic['id'] = meta._id_matcher.search(line[1]).group()
             #dic['file'] = line[0] + "/" + line[1]
-            yield (meta._id_matcher.search(line[1]).group(), line[0] + "/" + line[1])
+            yield (meta._id_matcher.search(line[1]).group(), os.path.join(line[0], line[1]))
+            
 

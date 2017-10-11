@@ -4,7 +4,7 @@ from utils import printProgressBar
 
 class svs:
     import re
-    _matcher = re.compile("TCGA-\w{2}-\w{4}")
+    _matcher = re.compile("TCGA-\w{2}-\w{4}-\w{3}-\w{2}-\w{3}")
     
     def __init__(self, file):
         
@@ -17,7 +17,8 @@ class svs:
         slide_count = 0
         slide_start = [0, 0]
 
-        allCount = (width / unit + (width % unit != 0)) * (height / unit + (height % unit))
+        allCount = ((width / unit + (width % unit != 0))
+                    * (height / unit + (height % unit != 0)))
 
         id = svs._matcher.search(self.sourceFile).group()
         while slide_start[1] < height:
@@ -32,7 +33,7 @@ class svs:
 
                 printProgressBar(slide_count, allCount,
                                  prefix = ("%s(%d/%d):" % (id, slide_count, allCount)),
-                                 length=50)
+                                 length=30)
 
             slide_start[0] = 0
             slide_start[1] = slide_start[1] + unit
