@@ -5,8 +5,8 @@ import time
 
 
 # Print iterations progress
-def printProgressBar(iteration, total, prefix='', suffix='',
-                     decimals=1, length=50, fill='█', start_time=None):
+def printProgressBar(iteration, total, time_start=None, prefix='',
+                     suffix='', decimals=1, length=50, fill='█'):
     """
     Call in a loop to create terminal progress bar
     @params:
@@ -24,9 +24,9 @@ def printProgressBar(iteration, total, prefix='', suffix='',
     filledLength = int(length * iteration // total)
     bar = fill * filledLength + '-' * (length - filledLength)
     left_time_str = ""
-    if start_time is not None:
+    if time_start is not None:
         current_time = time.time()
-        left_time = ((current_time - start_time)
+        left_time = ((current_time - time_start)
                      / float(iteration) * (total - iteration))
         left_time_str = ("%02d:%02d:%02d"
                          % (int(left_time / 3600),
