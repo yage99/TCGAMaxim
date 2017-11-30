@@ -32,8 +32,9 @@ def printProgressBar(iteration, total, prefix='', suffix='',
                          % (int(left_time / 3600),
                             int((left_time % 3600) / 60),
                             int(left_time % 60)))
-    sys.stdout.write('\r%s |%s| %s%% %s %s'
-                     % (prefix, bar, percent, suffix, left_time_str))
+    sys.stdout.write('\r%s (%d/%d)|%s| %s%% %s %s'
+                     % (prefix, iteration, total, bar,
+                        percent, suffix, left_time_str))
     sys.stdout.flush()
     # Print New Line on Complete
     if iteration == total:
