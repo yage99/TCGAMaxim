@@ -24,7 +24,7 @@ def printProgressBar(iteration, total, time_start=None, prefix='',
     filledLength = int(length * iteration // total)
     bar = fill * filledLength + '-' * (length - filledLength)
     left_time_str = ""
-    if time_start is not None:
+    if time_start is not None and iteration != 0:
         current_time = time.time()
         left_time = ((current_time - time_start)
                      / float(iteration) * (total - iteration))
