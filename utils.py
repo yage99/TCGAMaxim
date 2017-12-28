@@ -6,7 +6,7 @@ import time
 
 # Print iterations progress
 def printProgressBar(iteration, total, time_start=None, prefix='',
-                     suffix='', decimals=1, length=50, fill='█'):
+                     suffix='', decimals=1, length=30, fill='█'):
     """
     Call in a loop to create terminal progress bar
     @params:
