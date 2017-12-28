@@ -2,6 +2,7 @@ import openslide
 import os
 from utils import printProgressBar
 
+
 class svs:
     import re
     _matcher = re.compile("TCGA-\w{2}-\w{4}-\w{3}-\w{2}-\w{3}")
@@ -32,7 +33,7 @@ class svs:
                 slide_start[0] = slide_start[0] + unit
 
                 printProgressBar(slide_count, allCount,
-                                 prefix = ("%s(%d/%d):" % (id, slide_count, allCount)),
+                                 prefix=("%s:" % id),
                                  length=30)
 
             slide_start[0] = 0
