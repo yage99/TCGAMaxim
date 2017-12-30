@@ -6,9 +6,9 @@ from utils import printProgressBar
 class svs:
     import re
     _matcher = re.compile("TCGA-\w{2}-\w{4}-\w{3}-\w{2}-\w{3}")
-    
+
     def __init__(self, file):
-        
+
         self.slide = openslide.OpenSlide(file)
         self.location, self.sourceFile = os.path.split(file)
 
@@ -40,4 +40,3 @@ class svs:
             slide_start[1] = slide_start[1] + unit
 
         print(id + " process finished")
-        

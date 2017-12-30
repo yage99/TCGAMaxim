@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
+
 class clinical:
     import re
     _matcher = re.compile("(\{.*\})(.*)")
-    
+
     def __init__(self, file):
 
         import xml.etree.ElementTree
@@ -14,7 +15,7 @@ class clinical:
 
     def print_nodes(self):
         for idx, child in enumerate(self.root):
-            self.__print_node(child, lastElement = idx==len(self.root) -1)
+            self.__print_node(child, lastElement=(idx == (len(self.root) - 1)))
 
     def retrive_by_prefered_name_path(self, names):
         dic = {}
@@ -29,7 +30,7 @@ class clinical:
             for item in node:
                 results.append(self.__get_node(item, name))
             return results
-        
+
         if len(name) == 1:
             if name[0] in node:
                 return node[name[0]]
@@ -37,10 +38,10 @@ class clinical:
                 return None
 
         if name[0] in node:
-           return self.__get_node(node[name[0]], name[1:])
+            return self.__get_node(node[name[0]], name[1:])
         else:
-           #print("no node named %s" % name[0])
-           return None
+            # print("no node named %s" % name[0])
+            return None
 
     def retrive_days_to_death(self):
         results = {}
@@ -56,7 +57,7 @@ class clinical:
         days_to_death = []
 
         try:
-           days_to_death.append(int(v['patient/days_to_death']))
+            days_to_death.append(int(v['patient/days_to_death']))
         except Exception:
             pass
 
@@ -77,12 +78,13 @@ class clinical:
         days_to_last_followup = []
 
         try:
-            days_to_last_followup.append(int(v['patient/days_to_last_followup']))
+            days_to_last_followup.append(int(
+                v['patient/days_to_last_followup']))
         except Exception:
             pass
 
         dump = v['patient/follow_ups/follow_up/days_to_last_followup']
-        
+
         if isinstance(dump, type([])):
             for num in dump:
                 try:
@@ -103,19 +105,21 @@ class clinical:
             vital_status = []
 
         if v['patient/follow_ups/follow_up/vital_status'] is not None:
-            if isinstance(v['patient/follow_ups/follow_up/vital_status'], type([])):
-                vital_status.extend(v['patient/follow_ups/follow_up/vital_status'])
+            if isinstance(
+                    v['patient/follow_ups/follow_up/vital_status'], type([])):
+                vital_status.extend(
+                        v['patient/follow_ups/follow_up/vital_status'])
             else:
-                vital_status.append(v['patient/follow_ups/follow_up/vital_status'])
-                
+                vital_status.append(
+                        v['patient/follow_ups/follow_up/vital_status'])
+
         results['vital_status'] = vital_status
 
         return results
-            
 
     def __clinical_parse_to_dict(self, node):
         elements = {}
-    
+
         for child in node:
             key = clinical._matcher.match(child.tag).group(2)
             if 'prefered_name' in child.attrib:
@@ -129,17 +133,16 @@ class clinical:
                     elements[key] = [v, self.__clinical_parse_to_dict(child)]
             else:
                 elements[key] = self.__clinical_parse_to_dict(child)
-        
-        if node.text is not None and '\n' not in node.text:
-            #key = clinical._matcher.match(node.tag).group(2)
-            #if 'prefered_name' in node.attrib:
-            #    key = node.attrb['prefered_name']
 
-            #elements[key] = node.text
+        if node.text is not None and '\n' not in node.text:
+            # key = clinical._matcher.match(node.tag).group(2)
+            # if 'prefered_name' in node.attrib:
+            #     key = node.attrb['prefered_name']
+
+            # elements[key] = node.text
             return node.text
 
         return elements
-
 
     def __print_node(self, node, level="", lastElement=False):
         if lastElement:
@@ -166,5 +169,4 @@ class clinical:
             print(line + key)
 
         for idx, child in enumerate(node):
-            self.__print_node(child, level, idx==len(node)-1)
-
+            self.__print_node(child, level, idx == len(node)-1)
