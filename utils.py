@@ -12,6 +12,7 @@ def printProgressBar(iteration, total, time_start=None, prefix='',
     @params:
         iteration   - Required  : current iteration (Int)
         total       - Required  : total iterations (Int)
+        time_start  - Optional  : start time of process (Long)
         prefix      - Optional  : prefix string (Str)
         suffix      - Optional  : suffix string (Str)
         decimals    - Optional  : positive number of decimals in
