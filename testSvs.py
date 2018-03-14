@@ -20,7 +20,6 @@ def log_callback(result):
 
 def process(location, svsFile):
     slide = svs(os.path.join(location, svsFile))
-
     # thread = Thread(target = slide.slideWholeSlide,
     #         args = (slide.location, 1024,))
     # pool.apply_async(slide.slideWholeSlide,
@@ -38,7 +37,6 @@ def main(metaFile):
     pool = mp.Pool(20)
 
     for id, svsFile in svsSlides.files():
-        print svsFile
         pool.apply_async(process, (location, svsFile, ),
                          callback=log_callback)
 
