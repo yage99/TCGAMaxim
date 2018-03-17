@@ -12,7 +12,7 @@ class svs:
         self.slide = openslide.OpenSlide(file)
         self.location, self.sourceFile = os.path.split(file)
 
-    def slideWholeSlide(self, location, unit=1000):
+    def slideWholeSlide(self, location, unit=1024):
         width, height = self.slide.dimensions
 
         slide_count = 0
