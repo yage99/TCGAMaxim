@@ -34,6 +34,9 @@ class meta:
                    os.path.join(line[0], line[1]))
         # return iter(self.lines)
 
+    def __len__(self):
+        return len(self.lines)
+
     def list(self):
         '''
         return the real list in the meta file
