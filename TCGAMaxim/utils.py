@@ -2,6 +2,55 @@
 
 import sys
 import time
+import numpy as np
+
+
+def rgb2lab(input_image):
+    """
+    rgb2lab function based on codes from
+    https://stackoverflow.com/questions/13405956/convert-an-image-rgb-lab-with-python
+    """
+    xyz = np.zeros(input_image.shape)
+
+    input_image = np.where(
+            input_image > 0.04045,
+            ((input_image + 0.055) / 1.055) ** 2.4,
+            input_image / 12.92)
+
+    input_image = input_image * 100
+
+    xyz[:, :, 0] = (input_image[:, :, 0] * 0.4124 +
+                    input_image[:, :, 1] * 0.3576 +
+                    input_image[:, :, 2] * 0.1805)
+    xyz[:, :, 1] = (input_image[:, :, 0] * 0.2126 +
+                    input_image[:, :, 1] * 0.7152 +
+                    input_image[:, :, 2] * 0.0722)
+    xyz[:, :, 2] = (input_image[:, :, 0] * 0.0193 +
+                    input_image[:, :, 1] * 0.1192 +
+                    input_image[:, :, 2] * 0.9505)
+    xyz = np.round(xyz, 4)
+
+    xyz[:, :, 0] = xyz[:, :, 0] / 95.047
+    xyz[:, :, 1] = xyz[:, :, 1] / 100.0
+    xyz[:, :, 2] = xyz[:, :, 2] / 108.883
+
+    xyz = np.where(
+            xyz > 0.008856,
+            xyz ** (0.3333333333333333),
+            7.787 * xyz + 16 / 116)
+
+    lab = np.zeros(xyz.shape)
+    lab[:, :, 0] = 116 * xyz[:, :, 1] - 16
+    lab[:, :, 1] = 500 * (xyz[:, :, 0] - xyz[:, :, 1])
+    lab[:, :, 2] = 300 * (xyz[:, :, 1] - xyz[:, :, 2])
+
+    # L = ( 116 * XYZ[ 1 ] ) - 16
+    # a = 500 * ( XYZ[ 0 ] - XYZ[ 1 ] )
+    # b = 200 * ( XYZ[ 1 ] - XYZ[ 2 ] )
+
+    lab = np.round(lab, 4)
+
+    return lab
 
 
 # Print iterations progress
