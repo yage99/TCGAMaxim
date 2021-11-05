@@ -8,6 +8,6 @@ setup(name='TCGAMaxim',
       author='Ya Zhang',
       author_email='zhangya@mail.ustc.edu.cn',
       url='https://github.com/yage99/TCGAMaxim.git',
-      download_url=""
+      download_url="https://github.com/yage99/TCGAMaxim/archive/refs/tags/v1.0.tar.gz",
       packages=['TCGAMaxim'],
       )
